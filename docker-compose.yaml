@@ -1,0 +1,25 @@
+services:
+  downloader:
+    build: .
+    container_name: cleanstream_station
+    tty: true # Essential for TUI
+    stdin_open: true # Essential for TUI
+    volumes:
+      # Map the current code directory to /app
+      - .:/app
+
+      # Map a local folder for FINAL 'clean' output
+      # Change './safe_zone' to wherever you want the clean files to go on the host
+      - ./safe_zone:/app/safe_output
+      # We don't map the 'dirty' download folder to the host to keep it isolated!
+      # It stays inside the container (strictly speaking it's ephemeral).
+      # If you want to persist dirty files for debugging, uncomment below:
+      # - ./dirty_zone:/app/downloads
+
+    environment:
+      - TERM=xterm-256color # Ensure colors work in the TUI
+    # Security options (Optional reinforcement)
+    # cap_drop:
+    #   - ALL
+    # cap_add:
+    #   - NET_BIND_SERVICE # Only if needed
